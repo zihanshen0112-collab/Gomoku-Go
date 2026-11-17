@@ -29,6 +29,16 @@
       <aside class="sidebar">
         <div id="turn" class="turn">黑棋 行棋</div>
         <div id="status" class="status"></div>
+        <div class="ai-panel">
+          <label class="ai-toggle">
+            <input type="checkbox" id="ai-enable"> AI 对战
+          </label>
+          <select id="ai-color" disabled>
+            <option value="white">我执黑（AI 执白）</option>
+            <option value="black">我执白（AI 执黑）</option>
+          </select>
+          <span id="ai-status" class="ai-status"></span>
+        </div>
         <div class="controls">
           <button id="undo">回溯</button>
           <button id="redo">返回</button>
@@ -52,5 +62,6 @@
   <script src="js/renderer.js"></script>
   <script src="js/storage.js"></script>
   <script src="js/app.js"></script>
+  <script src="js/ai.js"></script>  
 </body>
 </html>

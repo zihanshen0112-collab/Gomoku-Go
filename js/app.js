@@ -1,5 +1,6 @@
 let game, renderer;
 let lang = 'zh';
+let aiThinking = false;
 
 const I18N = {
   zh: {
@@ -87,6 +88,7 @@ function bindEvents() {
   const canvas = document.getElementById('board');
 
   canvas.addEventListener('click', (e) => {
+    if (aiThinking) return;                                   
     const rect = canvas.getBoundingClientRect();
     const { x, y } = renderer.pixelToPos(e.clientX - rect.left, e.clientY - rect.top);
     if (x < 0 || y < 0 || x >= game.size || y >= game.size) return;
@@ -97,6 +99,7 @@ function bindEvents() {
     renderer.draw();
     updateUI();
     if (game.state === 'finished') onGameEnd();
+    else maybeTriggerAI();                
   });
 
   document.getElementById('mode-gomoku').onclick = () => switchMode('gomoku');
@@ -116,7 +119,14 @@ function bindEvents() {
   };
 
   document.getElementById('undo').onclick = () => {
-    if (game.undo().ok) { renderer.draw(); updateUI(); }
+  if (aiThinking) return;
+  const aiOn = document.getElementById('ai-enable').checked && game.mode === 'gomoku';
+  const steps = aiOn ? Math.min(2, game.history.length) : 1;
+  let any = false;
+  for (let i = 0; i < steps; i++) {
+    if (game.undo().ok) any = true;
+  }
+  if (any) { renderer.draw(); updateUI(); }
   };
 
   document.getElementById('redo').onclick = () => {
@@ -169,6 +179,51 @@ function bindEvents() {
     document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
     updateUI();
   };
+
+  document.getElementById('ai-enable').onchange = (e) => {
+  const on = e.target.checked;
+  document.getElementById('ai-color').disabled = !on;
+  updateUI();
+  if (on) maybeTriggerAI();
+};
+
+  document.getElementById('ai-color').onchange = () => {
+    updateUI();
+    if (game.history.length === 0) {
+      maybeTriggerAI();
+    }
+  };
+}
+
+function maybeTriggerAI() {
+  if (!document.getElementById('ai-enable').checked) return;
+  if (game.mode !== 'gomoku') return;
+  if (game.state === 'finished') return;
+  if (aiThinking) return;
+
+  const humanColor = document.getElementById('ai-color').value === 'white' ? BLACK : WHITE;
+  if (game.currentColor === humanColor) return;
+
+  aiThinking = true;
+  updateUI();
+
+  setTimeout(() => {
+    try {
+      const move = GomokuAI.findBestMove(game.board, game.currentColor);
+      if (move) {
+        const r = game.place(move.x, move.y);
+        if (r.ok) {
+          renderer.draw();
+          if (game.state === 'finished') onGameEnd();
+        }
+      }
+    } catch (err) {
+      console.error('[AI] findBestMove failed:', err);
+    } finally {
+      aiThinking = false;
+      updateUI();
+    }
+  }, 60);
 }
 
 function switchMode(mode) {
@@ -238,6 +293,25 @@ function updateUI() {
   } else {
     statusEl.textContent = t('moveN', game.history.length + 1);
   }
+  const aiEnable = document.getElementById('ai-enable');
+  const aiColorSel = document.getElementById('ai-color');
+  if (game.mode === 'gomoku') {
+    document.querySelector('.ai-panel').style.display = '';
+  } else {
+    document.querySelector('.ai-panel').style.display = 'none';
+    aiEnable.checked = false;
+    aiColorSel.disabled = true;
+  }
+
+  const humanColor = aiColorSel.value === 'white' ? BLACK : WHITE;
+  const status = document.getElementById('ai-status');
+  if (aiEnable.checked && game.state !== 'finished') {
+    if (aiThinking) status.textContent = 'AI 思考中…';
+    else if (game.currentColor !== humanColor) status.textContent = 'AI 即将落子';
+    else status.textContent = '轮到你';
+  } else {
+    status.textContent = '';
+}
 }
 
 async function onGameEnd() {
@@ -255,5 +329,4 @@ function showMessage(msg) {
   clearTimeout(el._t);
   el._t = setTimeout(() => el.classList.remove('show'), 2600);
 }
-
 window.addEventListener('DOMContentLoaded', init);
