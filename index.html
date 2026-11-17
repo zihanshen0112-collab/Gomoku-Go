@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>围棋 / 五子棋</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>围棋 / 五子棋</h1>
+      <div class="toolbar">
+        <button id="mode-gomoku" class="mode-btn active">五子棋</button>
+        <button id="mode-go" class="mode-btn">围棋</button>
+        <select id="size-select">
+          <option value="13">13 路</option>
+          <option value="15">15 路</option>
+          <option value="19" selected>19 路</option>
+        </select>
+        <button id="new-game">新对局</button>
+      </div>
+    </header>
+    <main>
+      <div class="board-wrap">
+        <canvas id="board"></canvas>
+      </div>
+      <aside class="sidebar">
+        <div id="turn" class="turn">黑棋 行棋</div>
+        <div id="status" class="status"></div>
+        <div class="controls">
+          <button id="undo">回溯</button>
+          <button id="redo">返回</button>
+          <button id="pass">Pass</button>
+          <button id="finish">结束对局</button>
+        </div>
+        <div class="controls">
+          <button id="save">保存对局</button>
+          <button id="load">加载对局</button>
+        </div>
+        <div id="message" class="message"></div>
+      </aside>
+    </main>
+  </div>
+
+  <script src="js/core/board.js"></script>
+  <script src="js/core/gomoku.js"></script>
+  <script src="js/core/go.js"></script>
+  <script src="js/core/game.js"></script>
+  <script src="js/renderer.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
