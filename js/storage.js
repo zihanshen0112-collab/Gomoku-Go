@@ -51,7 +51,7 @@ const Storage = {
         await writable.close();
         return { ok: true, filename, path: this.dirHandle.name };
       } catch (e) {
-        if (e.name === 'AbortError') return { ok: false, reason: '已取消' };
+        if (e.name === 'AbortError') return { ok: false, reason: 'cancelled' };
       }
     }
 
@@ -63,20 +63,20 @@ const Storage = {
     a.download = filename;
     a.click();
     URL.revokeObjectURL(url);
-    return { ok: true, filename, path: '下载文件夹' };
+    return { ok: true, filename, path: 'Downloads' };
   },
 
   async loadGame() {
     if (window.showOpenFilePicker) {
       try {
         const [fileHandle] = await window.showOpenFilePicker({
-          types: [{ description: '对局文件', accept: { 'application/json': ['.json'] } }]
+          types: [{ description: 'Game file', accept: { 'application/json': ['.json'] } }]
         });
         const file = await fileHandle.getFile();
         const text = await file.text();
         return { ok: true, data: JSON.parse(text) };
       } catch (e) {
-        if (e.name === 'AbortError') return { ok: false, reason: '已取消' };
+        if (e.name === 'AbortError') return { ok: false, reason: 'cancelled' };
         return { ok: false, reason: e.message };
       }
     }
@@ -87,7 +87,7 @@ const Storage = {
       input.accept = '.json';
       input.onchange = async () => {
         const file = input.files[0];
-        if (!file) return resolve({ ok: false, reason: '未选择文件' });
+        if (!file) return resolve({ ok: false, reason: 'noSelection' });
         try {
           const text = await file.text();
           resolve({ ok: true, data: JSON.parse(text) });

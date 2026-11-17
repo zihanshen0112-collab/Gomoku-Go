@@ -7,21 +7,40 @@ class Renderer {
     window.addEventListener('resize', () => this.resize());
   }
 
-  setGame(game) { this.game = game; this.draw(); }
+  setGame(game) {
+    this.game = game;
+    this.resize(); // 关键：尺寸/棋盘变化后重新计算 cssSize、margin、cellSize
+  }
 
   resize() {
     const size = this.game.size;
     const dpr = window.devicePixelRatio || 1;
-    const maxSize = Math.min(window.innerWidth - 40, window.innerHeight - 200, 700);
-    const cssSize = Math.max(300, maxSize);
+
+    // 目标格距约 30px，这样 13 路木色方块 < 19 路木色方块
+    let cellSize = 30;
+    const margin = 22;
+
+    const maxSize = Math.min(window.innerWidth - 40, window.innerHeight - 200, 760);
+    const minSize = 260;
+
+    let cssSize = margin * 2 + (size - 1) * cellSize;
+    if (cssSize > maxSize) {
+      cellSize = (maxSize - margin * 2) / (size - 1);
+      cssSize = maxSize;
+    } else if (cssSize < minSize) {
+      cssSize = minSize;
+      cellSize = (cssSize - margin * 2) / (size - 1);
+    }
+
     this.canvas.style.width = cssSize + 'px';
     this.canvas.style.height = cssSize + 'px';
-    this.canvas.width = cssSize * dpr;
-    this.canvas.height = cssSize * dpr;
+    this.canvas.width = Math.round(cssSize * dpr);
+    this.canvas.height = Math.round(cssSize * dpr);
     this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
     this.cssSize = cssSize;
-    this.margin = cssSize * 0.05;
-    this.cellSize = (cssSize - this.margin * 2) / (size - 1);
+    this.margin = margin;
+    this.cellSize = cellSize;
     this.draw();
   }
 
@@ -52,6 +71,7 @@ class Renderer {
     const s = this.cssSize;
     ctx.clearRect(0, 0, s, s);
 
+    // 木色背景随 cssSize 一起变化（cssSize 由棋盘大小决定）
     ctx.fillStyle = '#e8b96a';
     ctx.fillRect(0, 0, s, s);
 

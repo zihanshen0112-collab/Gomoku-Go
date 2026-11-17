@@ -1,4 +1,79 @@
 let game, renderer;
+let lang = 'zh';
+
+const I18N = {
+  zh: {
+    title: '围棋 / 五子棋',
+    gomoku: '五子棋',
+    go: '围棋',
+    newGame: '新对局',
+    undo: '回溯',
+    redo: '返回',
+    restore: '复原',
+    pass: 'Pass',
+    finish: '结束对局',
+    save: '保存对局',
+    load: '加载对局',
+    blackTurn: '黑棋 行棋',
+    whiteTurn: '白棋 行棋',
+    gameOver: '对局结束',
+    moveN: n => `第 ${n} 手`,
+    blackWin: '黑棋 胜',
+    whiteWin: '白棋 胜',
+    draw: '和棋',
+    illegal: '非法落子',
+    finishedMsg: '对局已结束',
+    cancelled: '已取消',
+    confirmSize: '切换棋盘大小会丢失当前对局，确定？',
+    confirmNew: '当前对局未保存，确定开始新对局？',
+    confirmMode: '切换模式会丢失当前对局，确定？',
+    confirmEnd: '确定结束当前对局？',
+    confirmSave: '对局结束！是否保存为纪念？',
+    saved: (f, p) => `已保存：${f}（${p}）`,
+    saveFailed: r => `保存失败：${r}`,
+    loaded: '已加载对局',
+    noSelection: '未选择文件',
+    sizeLabel: n => `${n} 行×${n} 列`,
+  },
+  en: {
+    title: 'Go / Gomoku',
+    gomoku: 'Gomoku',
+    go: 'Go',
+    newGame: 'New Game',
+    undo: 'Undo',
+    redo: 'Redo',
+    restore: 'Restore',
+    pass: 'Pass',
+    finish: 'End Game',
+    save: 'Save',
+    load: 'Load',
+    blackTurn: 'Black to play',
+    whiteTurn: 'White to play',
+    gameOver: 'Game Over',
+    moveN: n => `Move ${n}`,
+    blackWin: 'Black wins',
+    whiteWin: 'White wins',
+    draw: 'Draw',
+    illegal: 'Illegal move',
+    finishedMsg: 'Game is over',
+    cancelled: 'Cancelled',
+    confirmSize: 'Changing board size will lose the current game. Continue?',
+    confirmNew: 'Current game is not saved. Start a new game?',
+    confirmMode: 'Switching mode will lose the current game. Continue?',
+    confirmEnd: 'End the current game?',
+    confirmSave: 'Game over! Save as a memorial?',
+    saved: (f, p) => `Saved: ${f} (${p})`,
+    saveFailed: r => `Save failed: ${r}`,
+    loaded: 'Game loaded',
+    noSelection: 'No file selected',
+    sizeLabel: n => `${n} × ${n}`,
+  }
+};
+
+function t(key, ...args) {
+  const v = I18N[lang][key];
+  return typeof v === 'function' ? v(...args) : v;
+}
 
 function init() {
   const canvas = document.getElementById('board');
@@ -17,7 +92,7 @@ function bindEvents() {
     if (x < 0 || y < 0 || x >= game.size || y >= game.size) return;
 
     const result = game.place(x, y);
-    if (!result.ok) { showMessage(result.reason); return; }
+    if (!result.ok) { showMessage(t(result.reason)); return; }
 
     renderer.draw();
     updateUI();
@@ -28,7 +103,7 @@ function bindEvents() {
   document.getElementById('mode-go').onclick = () => switchMode('go');
 
   document.getElementById('size-select').onchange = (e) => {
-    if (game.history.length > 0 && !confirm('切换棋盘大小会丢失当前对局，确定？')) {
+    if (game.history.length > 0 && !confirm(t('confirmSize'))) {
       e.target.value = game.size;
       return;
     }
@@ -36,7 +111,7 @@ function bindEvents() {
   };
 
   document.getElementById('new-game').onclick = () => {
-    if (game.history.length > 0 && !confirm('当前对局未保存，确定开始新对局？')) return;
+    if (game.history.length > 0 && !confirm(t('confirmNew'))) return;
     newGame(game.mode, game.size);
   };
 
@@ -46,6 +121,10 @@ function bindEvents() {
 
   document.getElementById('redo').onclick = () => {
     if (game.redo().ok) { renderer.draw(); updateUI(); }
+  };
+
+  document.getElementById('restore').onclick = () => {
+    if (game.restoreAll().ok) { renderer.draw(); updateUI(); }
   };
 
   document.getElementById('pass').onclick = () => {
@@ -59,7 +138,7 @@ function bindEvents() {
 
   document.getElementById('finish').onclick = () => {
     if (game.state === 'finished') return;
-    if (!confirm('确定结束当前对局？')) return;
+    if (!confirm(t('confirmEnd'))) return;
     game.finish();
     renderer.draw();
     updateUI();
@@ -69,22 +148,31 @@ function bindEvents() {
   document.getElementById('save').onclick = async () => {
     const type = game.state === 'finished' ? 'archive' : 'continue';
     const r = await Storage.saveGame(game, type);
-    if (r.ok) showMessage(`已保存：${r.filename}（${r.path}）`);
-    else showMessage(`保存失败：${r.reason}`);
+    if (r.ok) showMessage(t('saved', r.filename, r.path));
+    else showMessage(I18N[lang][r.reason] ? t(r.reason) : t('saveFailed', r.reason));
   };
 
   document.getElementById('load').onclick = async () => {
     const r = await Storage.loadGame();
-    if (!r.ok) { showMessage(r.reason); return; }
+    if (!r.ok) {
+      showMessage(I18N[lang][r.reason] ? t(r.reason) : t('saveFailed', r.reason));
+      return;
+    }
     game = Storage.deserialize(r.data);
     renderer.setGame(game);
     updateUI();
-    showMessage('已加载对局');
+    showMessage(t('loaded'));
+  };
+
+  document.getElementById('lang-toggle').onclick = () => {
+    lang = lang === 'zh' ? 'en' : 'zh';
+    document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+    updateUI();
   };
 }
 
 function switchMode(mode) {
-  if (game.history.length > 0 && !confirm('切换模式会丢失当前对局，确定？')) return;
+  if (game.history.length > 0 && !confirm(t('confirmMode'))) return;
   newGame(mode, game.size);
 }
 
@@ -95,19 +183,40 @@ function newGame(mode, size) {
 }
 
 function updateUI() {
+  document.title = t('title');
+  document.getElementById('title').textContent = t('title');
+
+  document.getElementById('mode-gomoku').textContent = t('gomoku');
+  document.getElementById('mode-go').textContent = t('go');
   document.getElementById('mode-gomoku').classList.toggle('active', game.mode === 'gomoku');
   document.getElementById('mode-go').classList.toggle('active', game.mode === 'go');
-  document.getElementById('size-select').value = game.size;
+
+  document.getElementById('new-game').textContent = t('newGame');
+  document.getElementById('undo').textContent = t('undo');
+  document.getElementById('redo').textContent = t('redo');
+  document.getElementById('restore').textContent = t('restore');
+  document.getElementById('pass').textContent = t('pass');
+  document.getElementById('finish').textContent = t('finish');
+  document.getElementById('save').textContent = t('save');
+  document.getElementById('load').textContent = t('load');
+  document.getElementById('lang-toggle').textContent = lang === 'zh' ? 'EN' : '中';
+
+  const sizeSelect = document.getElementById('size-select');
+  for (const opt of sizeSelect.options) {
+    opt.textContent = t('sizeLabel', opt.value);
+  }
+  sizeSelect.value = String(game.size);
 
   const turnEl = document.getElementById('turn');
   if (game.state === 'finished') {
-    turnEl.textContent = '对局结束';
+    turnEl.textContent = t('gameOver');
   } else {
-    turnEl.textContent = (game.currentColor === BLACK ? '黑棋' : '白棋') + ' 行棋';
+    turnEl.textContent = game.currentColor === BLACK ? t('blackTurn') : t('whiteTurn');
   }
 
   document.getElementById('undo').disabled = !game.canUndo();
   document.getElementById('redo').disabled = !game.canRedo();
+  document.getElementById('restore').disabled = game.undone.length === 0;
   document.getElementById('pass').style.display = game.mode === 'go' ? '' : 'none';
   document.getElementById('pass').disabled = game.state === 'finished';
   document.getElementById('finish').disabled = game.state === 'finished';
@@ -116,28 +225,27 @@ function updateUI() {
   if (game.state === 'finished') {
     if (game.mode === 'go' && game.score) {
       const s = game.score;
-      statusEl.textContent =
-        `黑 ${s.blackScore} : 白 ${s.whiteScore} ` +
-        `（黑 ${s.blackStones} 子 + ${s.blackTerritory} 地 / ` +
-        `白 ${s.whiteStones} 子 + ${s.whiteTerritory} 地）`;
+      statusEl.textContent = lang === 'zh'
+        ? `黑 ${s.blackScore} : 白 ${s.whiteScore}（黑 ${s.blackStones} 子 + ${s.blackTerritory} 地 / 白 ${s.whiteStones} 子 + ${s.whiteTerritory} 地）`
+        : `Black ${s.blackScore} : White ${s.whiteScore} (B ${s.blackStones} stones + ${s.blackTerritory} territory / W ${s.whiteStones} stones + ${s.whiteTerritory} territory)`;
     } else if (game.winner === 'draw') {
-      statusEl.textContent = '和棋';
+      statusEl.textContent = t('draw');
     } else if (game.winner) {
-      statusEl.textContent = (game.winner === BLACK ? '黑棋' : '白棋') + ' 胜';
+      statusEl.textContent = game.winner === BLACK ? t('blackWin') : t('whiteWin');
     } else {
-      statusEl.textContent = '对局已结束';
+      statusEl.textContent = t('gameOver');
     }
   } else {
-    statusEl.textContent = `第 ${game.history.length + 1} 手`;
+    statusEl.textContent = t('moveN', game.history.length + 1);
   }
 }
 
 async function onGameEnd() {
-  const ok = confirm('对局结束！是否保存为纪念？');
+  const ok = confirm(t('confirmSave'));
   if (!ok) return;
   const r = await Storage.saveGame(game, 'archive');
-  if (r.ok) showMessage(`已保存：${r.filename}（${r.path}）`);
-  else showMessage(`保存失败：${r.reason}`);
+  if (r.ok) showMessage(t('saved', r.filename, r.path));
+  else showMessage(t('saveFailed', r.reason));
 }
 
 function showMessage(msg) {

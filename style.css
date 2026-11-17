@@ -19,6 +19,7 @@ button, select {
 button:hover:not(:disabled) { background: #f0f0f0; }
 button:disabled { opacity: 0.4; cursor: not-allowed; }
 .mode-btn.active { background: #333; color: #fff; border-color: #333; }
+#lang-toggle { min-width: 48px; font-weight: 600; }
 main { display: flex; gap: 24px; align-items: flex-start; flex-wrap: wrap; }
 .board-wrap { flex: 0 0 auto; }
 #board {

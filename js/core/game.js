@@ -15,13 +15,13 @@ class Game {
   }
 
   get rules() { return this.mode === 'gomoku' ? Gomoku : Go; }
-  canUndo() { return this.history.length > 0; }
-  canRedo() { return this.undone.length > 0; }
+  canUndo() { return this.history.length > 0; } // 只要场上有子
+  canRedo() { return this.undone.length > 0; }  // 返回次数 = 回溯次数
 
   place(x, y) {
-    if (this.state !== 'playing') return { ok: false, reason: '对局已结束' };
+    if (this.state !== 'playing') return { ok: false, reason: 'finishedMsg' };
     if (!this.rules.isValidMove(this.board, x, y, this.currentColor, this.koPoint)) {
-      return { ok: false, reason: '非法落子' };
+      return { ok: false, reason: 'illegal' };
     }
 
     const color = this.currentColor;
@@ -33,7 +33,24 @@ class Game {
       koPoint: result.koPoint || null
     };
     this.history.push(move);
-    this.undone = [];
+
+    // 回溯后落子：只有位置不同才清空重做栈
+    if (this.undone.length > 0) {
+      const firstRedo = this.undone[this.undone.length - 1];
+      const samePlace =
+        firstRedo.type === 'place' &&
+        firstRedo.x === x &&
+        firstRedo.y === y &&
+        firstRedo.color === color;
+      if (samePlace) {
+        // 落回原位：重做栈中这一手出栈，其余保留
+        this.undone.pop();
+      } else {
+        // 落在不同位置：禁止返回
+        this.undone = [];
+      }
+    }
+
     this.koPoint = result.koPoint || null;
     this.consecutivePasses = 0;
 
@@ -73,35 +90,46 @@ class Game {
     }
   }
 
-  // 回溯：撤回最后两手（黑白各一手）
+  // 回溯：每次只撤销一手（黑或白）
   undo() {
     if (this.history.length === 0) return { ok: false };
-    const count = Math.min(2, this.history.length);
-    for (let i = 0; i < count; i++) {
-      const move = this.history.pop();
-      this.undone.push(move);
-      this._revertMove(move);
-    }
+    const move = this.history.pop();
+    this.undone.push(move);
+    this._revertMove(move);
     this.currentColor = this.history.length % 2 === 0 ? BLACK : WHITE;
     this._recomputeKo();
     this.state = 'playing';
     this.winner = null;
     this.finishedReason = null;
     this.score = null;
-    this.consecutivePasses = 0;
+    this.consecutivePasses = this._countConsecutivePasses();
     return { ok: true };
   }
 
-  // 返回：恢复被回溯的着法
+  // 返回：每次只恢复一手
   redo() {
     if (this.undone.length === 0) return { ok: false };
-    const count = Math.min(2, this.undone.length);
-    for (let i = 0; i < count; i++) {
+    const move = this.undone.pop();
+    this._applyMoveAgain(move);
+    this.history.push(move);
+    this.currentColor = this.history.length % 2 === 0 ? BLACK : WHITE;
+    this._recomputeKo();
+    this.consecutivePasses = this._countConsecutivePasses();
+    this._checkFinishedAfterRedo();
+    return { ok: true };
+  }
+
+  // 复原：一次性把当前所有被回溯的着手全部恢复
+  restoreAll() {
+    if (this.undone.length === 0) return { ok: false };
+    while (this.undone.length > 0) {
       const move = this.undone.pop();
       this._applyMoveAgain(move);
+      this.history.push(move);
     }
     this.currentColor = this.history.length % 2 === 0 ? BLACK : WHITE;
     this._recomputeKo();
+    this.consecutivePasses = this._countConsecutivePasses();
     this._checkFinishedAfterRedo();
     return { ok: true };
   }
@@ -119,6 +147,15 @@ class Game {
     for (const [cx, cy] of move.captured) {
       this.board.set(cx, cy, stoneColor);
     }
+  }
+
+  _countConsecutivePasses() {
+    let count = 0;
+    for (let i = this.history.length - 1; i >= 0; i--) {
+      if (this.history[i].type === 'pass') count++;
+      else break;
+    }
+    return count;
   }
 
   _recomputeKo() {

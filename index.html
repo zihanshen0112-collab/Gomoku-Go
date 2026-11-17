@@ -9,16 +9,17 @@
 <body>
   <div class="container">
     <header>
-      <h1>围棋 / 五子棋</h1>
+      <h1 id="title">围棋 / 五子棋</h1>
       <div class="toolbar">
         <button id="mode-gomoku" class="mode-btn active">五子棋</button>
         <button id="mode-go" class="mode-btn">围棋</button>
         <select id="size-select">
-          <option value="13">13 路</option>
-          <option value="15">15 路</option>
-          <option value="19" selected>19 路</option>
+          <option value="13">13 行×13 列</option>
+          <option value="15">15 行×15 列</option>
+          <option value="19" selected>19 行×19 列</option>
         </select>
         <button id="new-game">新对局</button>
+        <button id="lang-toggle">EN</button>
       </div>
     </header>
     <main>
@@ -31,6 +32,7 @@
         <div class="controls">
           <button id="undo">回溯</button>
           <button id="redo">返回</button>
+          <button id="restore">复原</button>
           <button id="pass">Pass</button>
           <button id="finish">结束对局</button>
         </div>
