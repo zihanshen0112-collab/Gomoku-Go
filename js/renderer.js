@@ -9,14 +9,13 @@ class Renderer {
 
   setGame(game) {
     this.game = game;
-    this.resize(); // 关键：尺寸/棋盘变化后重新计算 cssSize、margin、cellSize
+    this.resize(); 
   }
 
   resize() {
     const size = this.game.size;
     const dpr = window.devicePixelRatio || 1;
 
-    // 目标格距约 30px，这样 13 路木色方块 < 19 路木色方块
     let cellSize = 30;
     const margin = 22;
 
@@ -71,7 +70,6 @@ class Renderer {
     const s = this.cssSize;
     ctx.clearRect(0, 0, s, s);
 
-    // 木色背景随 cssSize 一起变化（cssSize 由棋盘大小决定）
     ctx.fillStyle = '#e8b96a';
     ctx.fillRect(0, 0, s, s);
 

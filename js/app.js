@@ -35,6 +35,13 @@ const I18N = {
     loaded: '已加载对局',
     noSelection: '未选择文件',
     sizeLabel: n => `${n} 行×${n} 列`,
+    aiBattle: 'AI 对战',
+    aiAsWhite: '我执黑（AI 执白）',
+    aiAsBlack: '我执白（AI 执黑）',
+    aiThinking: 'AI 思考中…',
+    aiWaiting: '等待 AI',
+    aiYourTurn: '轮到你',
+    aiSaveBlocked: 'AI 思考中，请稍后保存',
   },
   en: {
     title: 'Go / Gomoku',
@@ -68,6 +75,13 @@ const I18N = {
     loaded: 'Game loaded',
     noSelection: 'No file selected',
     sizeLabel: n => `${n} × ${n}`,
+    aiBattle: 'Play vs AI',
+    aiAsWhite: 'I play Black (AI White)',
+    aiAsBlack: 'I play White (AI Black)',
+    aiThinking: 'AI thinking…',
+    aiWaiting: 'Waiting for AI',
+    aiYourTurn: 'Your turn',
+    aiSaveBlocked: 'AI is thinking, please wait',
   }
 };
 
@@ -88,7 +102,7 @@ function bindEvents() {
   const canvas = document.getElementById('board');
 
   canvas.addEventListener('click', (e) => {
-    if (aiThinking) return;                                   
+    if (aiThinking) return;
     const rect = canvas.getBoundingClientRect();
     const { x, y } = renderer.pixelToPos(e.clientX - rect.left, e.clientY - rect.top);
     if (x < 0 || y < 0 || x >= game.size || y >= game.size) return;
@@ -99,13 +113,14 @@ function bindEvents() {
     renderer.draw();
     updateUI();
     if (game.state === 'finished') onGameEnd();
-    else maybeTriggerAI();                
+    else maybeTriggerAI();
   });
 
   document.getElementById('mode-gomoku').onclick = () => switchMode('gomoku');
   document.getElementById('mode-go').onclick = () => switchMode('go');
 
   document.getElementById('size-select').onchange = (e) => {
+    if (aiThinking) { e.target.value = game.size; return; }
     if (game.history.length > 0 && !confirm(t('confirmSize'))) {
       e.target.value = game.size;
       return;
@@ -114,27 +129,43 @@ function bindEvents() {
   };
 
   document.getElementById('new-game').onclick = () => {
+    if (aiThinking) return;
     if (game.history.length > 0 && !confirm(t('confirmNew'))) return;
     newGame(game.mode, game.size);
   };
 
+  // undo：AI 模式下连撤两手，撤完可能轮到 AI
   document.getElementById('undo').onclick = () => {
-  if (aiThinking) return;
-  const aiOn = document.getElementById('ai-enable').checked && game.mode === 'gomoku';
-  const steps = aiOn ? Math.min(2, game.history.length) : 1;
-  let any = false;
-  for (let i = 0; i < steps; i++) {
-    if (game.undo().ok) any = true;
-  }
-  if (any) { renderer.draw(); updateUI(); }
+    if (aiThinking) return;
+    const aiOn = document.getElementById('ai-enable').checked && game.mode === 'gomoku';
+    const steps = aiOn ? Math.min(2, game.history.length) : 1;
+    let any = false;
+    for (let i = 0; i < steps; i++) {
+      if (game.undo().ok) any = true;
+    }
+    if (any) {
+      renderer.draw();
+      updateUI();
+      maybeTriggerAI();
+    }
   };
 
   document.getElementById('redo').onclick = () => {
-    if (game.redo().ok) { renderer.draw(); updateUI(); }
+    if (aiThinking) return;
+    if (game.redo().ok) {
+      renderer.draw();
+      updateUI();
+      maybeTriggerAI();
+    }
   };
 
   document.getElementById('restore').onclick = () => {
-    if (game.restoreAll().ok) { renderer.draw(); updateUI(); }
+    if (aiThinking) return;
+    if (game.restoreAll().ok) {
+      renderer.draw();
+      updateUI();
+      maybeTriggerAI();
+    }
   };
 
   document.getElementById('pass').onclick = () => {
@@ -147,6 +178,7 @@ function bindEvents() {
   };
 
   document.getElementById('finish').onclick = () => {
+    if (aiThinking) return;
     if (game.state === 'finished') return;
     if (!confirm(t('confirmEnd'))) return;
     game.finish();
@@ -156,6 +188,7 @@ function bindEvents() {
   };
 
   document.getElementById('save').onclick = async () => {
+    if (aiThinking) { showMessage(t('aiSaveBlocked')); return; }
     const type = game.state === 'finished' ? 'archive' : 'continue';
     const r = await Storage.saveGame(game, type);
     if (r.ok) showMessage(t('saved', r.filename, r.path));
@@ -163,14 +196,17 @@ function bindEvents() {
   };
 
   document.getElementById('load').onclick = async () => {
+    if (aiThinking) return;
     const r = await Storage.loadGame();
     if (!r.ok) {
       showMessage(I18N[lang][r.reason] ? t(r.reason) : t('saveFailed', r.reason));
       return;
     }
+    aiThinking = false;            // 重置可能残留的状态
     game = Storage.deserialize(r.data);
     renderer.setGame(game);
     updateUI();
+    maybeTriggerAI();              // 若加载的局面轮到 AI，则触发
     showMessage(t('loaded'));
   };
 
@@ -181,17 +217,16 @@ function bindEvents() {
   };
 
   document.getElementById('ai-enable').onchange = (e) => {
-  const on = e.target.checked;
-  document.getElementById('ai-color').disabled = !on;
-  updateUI();
-  if (on) maybeTriggerAI();
-};
+    const on = e.target.checked;
+    document.getElementById('ai-color').disabled = !on;
+    updateUI();
+    if (on) maybeTriggerAI();
+  };
 
+  // 切换执黑/执白：只要当前轮到 AI 就触发（不限于空盘）
   document.getElementById('ai-color').onchange = () => {
     updateUI();
-    if (game.history.length === 0) {
-      maybeTriggerAI();
-    }
+    maybeTriggerAI();
   };
 }
 
@@ -227,14 +262,17 @@ function maybeTriggerAI() {
 }
 
 function switchMode(mode) {
+  if (aiThinking) return;
   if (game.history.length > 0 && !confirm(t('confirmMode'))) return;
   newGame(mode, game.size);
 }
 
 function newGame(mode, size) {
+  aiThinking = false;
   game = new Game(size, mode);
   renderer.setGame(game);
   updateUI();
+  maybeTriggerAI();               // 新局若 AI 先手，立即走
 }
 
 function updateUI() {
@@ -269,12 +307,12 @@ function updateUI() {
     turnEl.textContent = game.currentColor === BLACK ? t('blackTurn') : t('whiteTurn');
   }
 
-  document.getElementById('undo').disabled = !game.canUndo();
-  document.getElementById('redo').disabled = !game.canRedo();
-  document.getElementById('restore').disabled = game.undone.length === 0;
+  document.getElementById('undo').disabled = !game.canUndo() || aiThinking;
+  document.getElementById('redo').disabled = !game.canRedo() || aiThinking;
+  document.getElementById('restore').disabled = game.undone.length === 0 || aiThinking;
   document.getElementById('pass').style.display = game.mode === 'go' ? '' : 'none';
-  document.getElementById('pass').disabled = game.state === 'finished';
-  document.getElementById('finish').disabled = game.state === 'finished';
+  document.getElementById('pass').disabled = game.state === 'finished' || aiThinking;
+  document.getElementById('finish').disabled = game.state === 'finished' || aiThinking;
 
   const statusEl = document.getElementById('status');
   if (game.state === 'finished') {
@@ -293,8 +331,15 @@ function updateUI() {
   } else {
     statusEl.textContent = t('moveN', game.history.length + 1);
   }
+
+  // AI 面板显示与状态
   const aiEnable = document.getElementById('ai-enable');
   const aiColorSel = document.getElementById('ai-color');
+
+  document.getElementById('ai-enable-label').textContent = t('aiBattle');
+  aiColorSel.options[0].textContent = t('aiAsWhite');
+  aiColorSel.options[1].textContent = t('aiAsBlack');
+
   if (game.mode === 'gomoku') {
     document.querySelector('.ai-panel').style.display = '';
   } else {
@@ -305,13 +350,13 @@ function updateUI() {
 
   const humanColor = aiColorSel.value === 'white' ? BLACK : WHITE;
   const status = document.getElementById('ai-status');
-  if (aiEnable.checked && game.state !== 'finished') {
-    if (aiThinking) status.textContent = 'AI 思考中…';
-    else if (game.currentColor !== humanColor) status.textContent = 'AI 即将落子';
-    else status.textContent = '轮到你';
+  if (aiEnable.checked && game.state !== 'finished' && game.mode === 'gomoku') {
+    if (aiThinking) status.textContent = t('aiThinking');
+    else if (game.currentColor !== humanColor) status.textContent = t('aiWaiting');
+    else status.textContent = t('aiYourTurn');
   } else {
     status.textContent = '';
-}
+  }
 }
 
 async function onGameEnd() {
@@ -329,4 +374,5 @@ function showMessage(msg) {
   clearTimeout(el._t);
   el._t = setTimeout(() => el.classList.remove('show'), 2600);
 }
+
 window.addEventListener('DOMContentLoaded', init);
