@@ -79,3 +79,37 @@ const GomokuAI = {
     return best;
   }
 };
+
+const GomokuAIModel = {
+  async findBestMove(board, color) {
+    const size = board.size;
+    const grid = [];
+    for (let y = 0; y < size; y++) {
+      const row = [];
+      for (let x = 0; x < size; x++) {
+        row.push(board.get(x, y));
+      }
+      grid.push(row);
+    }
+
+    try {
+      const res = await fetch("http://127.0.0.1:5001/api/ai-move", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ board: grid, color: color, sims: 100 })
+      });
+      if (!res.ok) throw new Error(await res.text());
+      const data = await res.json();
+      return { x: data.x, y: data.y };
+    } catch (e) {
+      console.error("Model AI error:", e);
+      // 如果后端返回了具体的错误信息（比如尺寸不匹配），直接弹出来
+      if (e.message) {
+        alert(e.message);
+      } else {
+        alert("无法连接 AI 模型服务，请确保 python ai_server.py 正在运行。");
+      }
+      return GomokuAI.findBestMove(board, color);
+    }
+  }
+};

@@ -1,13 +1,12 @@
 import os
 import time
+import glob
 import numpy as np
 import torch
 import torch.nn.functional as F
 
 from .model import GomokuNet, get_device
 from .selfplay import self_play_game
-import glob
-
 
 def train_step(model, optimizer, batch, device):
     states = torch.from_numpy(np.stack([s for s, _, _ in batch])).to(device)
@@ -35,63 +34,69 @@ def train_loop(
     batch_size=128,
     lr=1e-3,
     save_dir="data/models",
-    save_every=5,
-):
+    save_every=5,):
+
     device = get_device()
     print(f"[train] device = {device}")
 
     model = GomokuNet(board_size, channels, blocks).to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=lr, weight_decay=1e-4)
 
-    ckpts = sorted(glob.glob(os.path.join(save_dir, f"gomoku_{board_size}_*.pt")),
-               key=lambda p: int(p.rsplit("_", 1)[1].split(".")[0]))
-
     os.makedirs(save_dir, exist_ok=True)
     buffer = []
 
+    # 自动加载最新的检查点
+    ckpts = glob.glob(os.path.join(save_dir, f"gomoku_{board_size}_*.pt"))
     if ckpts:
-        latest = ckpts[-1]
-        print(f"[resume] loading {latest}")
-        ckpt = torch.load(latest, map_location=device)
+        latest_ckpt = max(ckpts, key=os.path.getmtime)
+        print(f"[resume] loading {latest_ckpt}")
+        ckpt = torch.load(latest_ckpt, map_location=device)
         model.load_state_dict(ckpt["state_dict"])
+        if "optimizer_state" in ckpt:
+            optimizer.load_state_dict(ckpt["optimizer_state"])
+            print("[resume] optimizer state loaded successfully")
 
     for it in range(1, iters + 1):
         t0 = time.time()
         model.eval()
+        
+        # 记录黑白胜负
+        b_wins, w_wins, draws = 0, 0, 0
+        
         for g in range(games_per_iter):
-            samples = self_play_game(model, device, board_size, n_sims)
-            if samples:
-                last_v = samples[-1][2]
-                print(f"    game result: {last_v:+.1f}") 
+            # 注意：这里 self_play_game 现在会返回 winner
+            samples, winner, _ = self_play_game(model, device, board_size, n_sims)
             buffer.extend(samples)
-            print(f"  [iter {it}] selfplay game {g+1}/{games_per_iter}, samples total = {len(buffer)}")
+            
+            if winner == 1: b_wins += 1
+            elif winner == 2: w_wins += 1
+            else: draws += 1
 
         model.train()
         n_batches = max(1, len(buffer) // batch_size)
         epoch_loss = 0.0
         for _ in range(n_batches):
-            batch = [buffer[random_idx(len(buffer))] for _ in range(batch_size)]
+            import random
+            batch = random.sample(buffer, batch_size)
             loss = train_step(model, optimizer, batch, device)
             epoch_loss += loss
         epoch_loss /= n_batches
 
-        # 保留最近 N 条样本，避免内存无限增长
         buffer = buffer[-20000:]
-
         dt = time.time() - t0
+        
         print(f"[iter {it}] loss={epoch_loss:.4f}, time={dt:.1f}s, buffer={len(buffer)}")
+        print(f"  -> 本轮战绩: 黑胜 {b_wins} / 白胜 {w_wins} / 平局 {draws} (黑赢比: {b_wins/max(1, b_wins+w_wins+draws)*100:.1f}%)")
 
         if it % save_every == 0 or it == iters:
-            path = os.path.join(save_dir, f"gomoku_{board_size}_{it}.pt")
+            timestamp = time.strftime("%Y%m%d_%H%M%S")
+            path = os.path.join(save_dir, f"gomoku_{board_size}_{it}_{timestamp}.pt")
             torch.save({
                 "state_dict": model.state_dict(),
+                "optimizer_state": optimizer.state_dict(),
                 "board_size": board_size,
                 "channels": channels,
                 "blocks": blocks,
                 "iter": it,
             }, path)
             print(f"[iter {it}] saved -> {path}")
-
-
-def random_idx(n):
-    return int(torch.randint(0, n, (1,)).item())

@@ -230,7 +230,7 @@ function bindEvents() {
   };
 }
 
-function maybeTriggerAI() {
+async function maybeTriggerAI() {
   if (!document.getElementById('ai-enable').checked) return;
   if (game.mode !== 'gomoku') return;
   if (game.state === 'finished') return;
@@ -239,12 +239,20 @@ function maybeTriggerAI() {
   const humanColor = document.getElementById('ai-color').value === 'white' ? BLACK : WHITE;
   if (game.currentColor === humanColor) return;
 
+  const aiType = document.getElementById('ai-type').value;
+
   aiThinking = true;
   updateUI();
 
-  setTimeout(() => {
+  setTimeout(async () => {
     try {
-      const move = GomokuAI.findBestMove(game.board, game.currentColor);
+      let move = null;
+      if (aiType === 'model' && typeof GomokuAIModel !== 'undefined') {
+        move = await GomokuAIModel.findBestMove(game.board, game.currentColor);
+      } else {
+        move = GomokuAI.findBestMove(game.board, game.currentColor);
+      }
+
       if (move) {
         const r = game.place(move.x, move.y);
         if (r.ok) {

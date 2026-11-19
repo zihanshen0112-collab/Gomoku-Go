@@ -1,0 +1,1172 @@
+{
+  "version": 1,
+  "type": "archive",
+  "mode": "gomoku",
+  "size": 15,
+  "board": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    2,
+    1,
+    2,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    2,
+    0,
+    0,
+    0,
+    0,
+    2,
+    2,
+    2,
+    1,
+    2,
+    0,
+    0,
+    0,
+    1,
+    0,
+    1,
+    2,
+    0,
+    0,
+    0,
+    0,
+    2,
+    0,
+    2,
+    2,
+    1,
+    0,
+    2,
+    2,
+    2,
+    1,
+    0,
+    1,
+    0,
+    0,
+    0,
+    1,
+    2,
+    1,
+    1,
+    0,
+    2,
+    1,
+    1,
+    1,
+    1,
+    2,
+    2,
+    0,
+    0,
+    0,
+    2,
+    1,
+    2,
+    2,
+    2,
+    1,
+    2,
+    1,
+    2,
+    1,
+    1,
+    1,
+    2,
+    0,
+    2,
+    1,
+    1,
+    1,
+    1,
+    2,
+    1,
+    2,
+    2,
+    2,
+    2,
+    1,
+    1,
+    0,
+    0,
+    1,
+    1,
+    2,
+    2,
+    2,
+    1,
+    1,
+    2,
+    2,
+    2,
+    0,
+    1,
+    1,
+    0,
+    2,
+    0,
+    2,
+    0,
+    2,
+    1,
+    1,
+    1,
+    1,
+    2,
+    2,
+    1,
+    1,
+    1,
+    2,
+    0,
+    0,
+    0,
+    1,
+    1,
+    2,
+    1,
+    2,
+    2,
+    1,
+    1,
+    2,
+    2,
+    2,
+    0,
+    0,
+    0,
+    0,
+    2,
+    2,
+    1,
+    1,
+    1,
+    0,
+    2,
+    1,
+    0,
+    1,
+    0,
+    0,
+    2,
+    1,
+    1,
+    1,
+    1,
+    2,
+    2,
+    0,
+    1,
+    0,
+    0,
+    2,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    2,
+    0,
+    0,
+    0,
+    0,
+    0,
+    2,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "history": [
+    {
+      "type": "place",
+      "x": 7,
+      "y": 7,
+      "color": 1,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 8,
+      "y": 6,
+      "color": 2,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 7,
+      "y": 6,
+      "color": 1,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 7,
+      "y": 5,
+      "color": 2,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 6,
+      "y": 4,
+      "color": 1,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 8,
+      "y": 4,
+      "color": 2,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 8,
+      "y": 5,
+      "color": 1,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 6,
+      "y": 6,
+      "color": 2,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 5,
+      "y": 7,
+      "color": 1,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 6,
+      "y": 7,
+      "color": 2,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 6,
+      "y": 8,
+      "color": 1,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 4,
+      "y": 6,
+      "color": 2,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 9,
+      "y": 3,
+      "color": 1,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 5,
+      "y": 6,
+      "color": 2,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 7,
+      "y": 8,
+      "color": 1,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 5,
+      "y": 8,
+      "color": 2,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 7,
+      "y": 9,
+      "color": 1,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 7,
+      "y": 10,
+      "color": 2,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 6,
+      "y": 9,
+      "color": 1,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 5,
+      "y": 10,
+      "color": 2,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 5,
+      "y": 9,
+      "color": 1,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 4,
+      "y": 9,
+      "color": 2,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 6,
+      "y": 10,
+      "color": 1,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 4,
+      "y": 8,
+      "color": 2,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 4,
+      "y": 7,
+      "color": 1,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 3,
+      "y": 8,
+      "color": 2,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 6,
+      "y": 11,
+      "color": 1,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 6,
+      "y": 12,
+      "color": 2,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 5,
+      "y": 11,
+      "color": 1,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 8,
+      "y": 8,
+      "color": 2,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 7,
+      "y": 11,
+      "color": 1,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 4,
+      "y": 11,
+      "color": 2,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 4,
+      "y": 10,
+      "color": 1,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 3,
+      "y": 11,
+      "color": 2,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 8,
+      "y": 9,
+      "color": 1,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 9,
+      "y": 9,
+      "color": 2,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 4,
+      "y": 12,
+      "color": 1,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 3,
+      "y": 13,
+      "color": 2,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 3,
+      "y": 12,
+      "color": 1,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 9,
+      "y": 7,
+      "color": 2,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 2,
+      "y": 12,
+      "color": 1,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 5,
+      "y": 12,
+      "color": 2,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 3,
+      "y": 10,
+      "color": 1,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 9,
+      "y": 8,
+      "color": 2,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 9,
+      "y": 6,
+      "color": 1,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 10,
+      "y": 8,
+      "color": 2,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 11,
+      "y": 9,
+      "color": 1,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 11,
+      "y": 7,
+      "color": 2,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 12,
+      "y": 6,
+      "color": 1,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 10,
+      "y": 7,
+      "color": 2,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 12,
+      "y": 7,
+      "color": 1,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 10,
+      "y": 6,
+      "color": 2,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 10,
+      "y": 5,
+      "color": 1,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 8,
+      "y": 7,
+      "color": 2,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 9,
+      "y": 5,
+      "color": 1,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 10,
+      "y": 9,
+      "color": 2,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 10,
+      "y": 10,
+      "color": 1,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 8,
+      "y": 10,
+      "color": 2,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 12,
+      "y": 8,
+      "color": 1,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 11,
+      "y": 10,
+      "color": 2,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 12,
+      "y": 11,
+      "color": 1,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 9,
+      "y": 11,
+      "color": 2,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 9,
+      "y": 10,
+      "color": 1,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 12,
+      "y": 5,
+      "color": 2,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 11,
+      "y": 6,
+      "color": 1,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 9,
+      "y": 4,
+      "color": 2,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 10,
+      "y": 11,
+      "color": 1,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 11,
+      "y": 12,
+      "color": 2,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 13,
+      "y": 7,
+      "color": 1,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 14,
+      "y": 6,
+      "color": 2,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 11,
+      "y": 5,
+      "color": 1,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 10,
+      "y": 4,
+      "color": 2,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 11,
+      "y": 4,
+      "color": 1,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 12,
+      "y": 3,
+      "color": 2,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 13,
+      "y": 8,
+      "color": 1,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 14,
+      "y": 9,
+      "color": 2,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 13,
+      "y": 6,
+      "color": 1,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 13,
+      "y": 5,
+      "color": 2,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 11,
+      "y": 3,
+      "color": 1,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 11,
+      "y": 2,
+      "color": 2,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 12,
+      "y": 9,
+      "color": 1,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 12,
+      "y": 10,
+      "color": 2,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 13,
+      "y": 9,
+      "color": 1,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 13,
+      "y": 10,
+      "color": 2,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 8,
+      "y": 12,
+      "color": 1,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 9,
+      "y": 13,
+      "color": 2,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 1,
+      "y": 12,
+      "color": 1,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 0,
+      "y": 12,
+      "color": 2,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 13,
+      "y": 4,
+      "color": 1,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 3,
+      "y": 3,
+      "color": 2,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 3,
+      "y": 6,
+      "color": 1,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 2,
+      "y": 4,
+      "color": 2,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 2,
+      "y": 7,
+      "color": 1,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 4,
+      "y": 2,
+      "color": 2,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 5,
+      "y": 1,
+      "color": 1,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 2,
+      "y": 2,
+      "color": 2,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 3,
+      "y": 7,
+      "color": 1,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 1,
+      "y": 7,
+      "color": 2,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 4,
+      "y": 5,
+      "color": 1,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 5,
+      "y": 4,
+      "color": 2,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 2,
+      "y": 8,
+      "color": 1,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 2,
+      "y": 9,
+      "color": 2,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 1,
+      "y": 8,
+      "color": 1,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 0,
+      "y": 9,
+      "color": 2,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 3,
+      "y": 2,
+      "color": 1,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 2,
+      "y": 3,
+      "color": 2,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 2,
+      "y": 1,
+      "color": 1,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 1,
+      "y": 3,
+      "color": 2,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 4,
+      "y": 3,
+      "color": 1,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 3,
+      "y": 5,
+      "color": 2,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 0,
+      "y": 2,
+      "color": 1,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 4,
+      "y": 4,
+      "color": 2,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 5,
+      "y": 5,
+      "color": 1,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 2,
+      "y": 6,
+      "color": 2,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 2,
+      "y": 5,
+      "color": 1,
+      "captured": [],
+      "koPoint": null
+    },
+    {
+      "type": "place",
+      "x": 5,
+      "y": 3,
+      "color": 2,
+      "captured": [],
+      "koPoint": null
+    }
+  ],
+  "undone": [],
+  "currentColor": 1,
+  "state": "finished",
+  "winner": 2,
+  "koPoint": null,
+  "consecutivePasses": 0,
+  "finishedReason": "五连",
+  "score": null,
+  "savedAt": "2026-11-19T00:53:52.268Z"
+}
