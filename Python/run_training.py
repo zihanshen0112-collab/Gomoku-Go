@@ -8,12 +8,14 @@ if __name__ == "__main__":
     p.add_argument("--channels", type=int, default=32)
     p.add_argument("--blocks", type=int, default=5)
     p.add_argument("--sims", type=int, default=50)
-    p.add_argument("--games", type=int, default=20, help="每次迭代自对弈盘数")
+    p.add_argument("--games", type=int, default=20, help="number of games per iter")
     p.add_argument("--iters", type=int, default=100)
     p.add_argument("--batch", type=int, default=128)
     p.add_argument("--lr", type=float, default=1e-3)
     p.add_argument("--save-dir", default="data/models")
-    p.add_argument("--save-every", type=int, default=5)
+    p.add_argument("--save-every", type=int, default=1)
+    p.add_argument("--use-human", action="store_true", help="mix human play data into training")
+
     args = p.parse_args()
 
     train_loop(
@@ -27,4 +29,5 @@ if __name__ == "__main__":
         lr=args.lr,
         save_dir=args.save_dir,
         save_every=args.save_every,
+        use_human=args.use_human
     )
